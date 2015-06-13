@@ -30,5 +30,20 @@ $app->post('/guest', function() use ($app) {
 $app->delete('/guest/:id', function($id) use ( $app ) { 
 	echo $id;
 });
+
+function getConnection(){
+	$dbhost = getenv('IP');
+	$dbuser = getenv('C(_USER');
+	$dbpass = '';
+	$dbname = 'c9';
+	$pdo = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
+}
+
+function getDB() {
+	$pdo = getConnection();
+	$db = new NotORM($pdo);
+	return $db;
+}
+
 $app->run();
 ?>
