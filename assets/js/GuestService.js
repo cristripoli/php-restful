@@ -2,13 +2,35 @@ var GuestService = {
 
 	list: [],
 	
-	add: function(guest) {
-		GuestService.list.push(guest);
-		GuestService.saveToLocalStorage();
+	add: function(guest, callback) {
+		$.ajax({
+			type: 'post',
+			contentType: 'application/json',
+			url: 'api/guest',
+			data: JSON.stringify(guest),
+			success: function(addedGuest){
+				console.log('Guest created!');
+				callback(addedGuest);
+			},
+			error: function(){
+				console.log('Error to add guest ' + guest.name);
+			}
+		});
 	},
 	
-	remove: function(guest) {
-		//TODO to implemented
+	remove: function(id, callback) {
+		$.ajax({
+			type: 'DELETE',
+			url: 'api/guest/' + id,
+			success: function(response) {
+				console.log('Guest deleted!');
+				callback(true);
+			},
+			error: function(jqXHR) {
+				console.log('Error to delete guest with id ' + id);
+				callback(false);
+			}
+		});
 	},
 	
 	getList: function(callback) {

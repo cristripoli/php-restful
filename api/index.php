@@ -34,7 +34,27 @@ $app->post('/guest', function() use ($app) {
 });
 
 $app->delete('/guest/:id', function($id) use ( $app ) { 
-	echo $id;
+	$db = getDB();
+	$response = "";
+	
+	$guest = $db->guests()->where('id', $id);
+	
+	if($guest->fetch()){
+		$result = $guest->delete();
+		$response = array(
+			'status' => 'true',
+			'message' => 'Guest deleted!'
+		);
+	}
+	else{
+		$response = array(
+			'status' => 'false',
+			'message' => 'Guest with $id does not exists.'
+		);
+		$app->response->setStatus(404);
+	}
+	$app ->response()->header('Content-Type', 'application/json');
+	echo json_encode($response);
 });
 
 function getConnection() {
